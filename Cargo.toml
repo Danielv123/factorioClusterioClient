@@ -1,0 +1,16 @@
+[package]
+name = "factorioClusterioClient"
+version = "0.1.0"
+authors = ["Danielv123 <tranen.bananen@gmail.com>"]
+
+[dependencies]
+time = "0.1.12"
+reqwest = "*"
+
+[dependencies.hyper]
+version = "*"
+default-features = false
+features = []
+
+[dependencies.curl]
+git = "https://github.com/carllerche/curl-rust"
