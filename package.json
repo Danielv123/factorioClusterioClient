@@ -1,0 +1,31 @@
+{
+  "name": "clusterio-client",
+  "version": "1.0.0",
+  "description": "GUI to download and launch factorio with server specific mods",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Danielv123/factorioClusterioClient.git"
+  },
+  "keywords": [
+    "clusterio",
+    "factorio",
+    "nodejs"
+  ],
+  "author": "Daniel Vestøl",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Danielv123/factorioClusterioClient/issues"
+  },
+  "homepage": "https://github.com/Danielv123/factorioClusterioClient#readme",
+  "devDependencies": {
+    "electron-prebuilt": "^1.4.13"
+  },
+  "dependencies": {
+    "needle": "^1.4.3"
+  }
+}
