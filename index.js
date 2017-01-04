@@ -4,6 +4,7 @@ const url = require('url')
 const ipc = ipcMain
 const needle = require("needle")
 const child_process = require('child_process');
+const Rcon = require('simple-rcon');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -69,9 +70,31 @@ ipc.on("launchFactorio", function(event, data){
 	console.log("Preparing to launch factorio... "+data)
 	// Todo: Check if factorio server is running at that port before launching factorio,
 	// possibly using https://www.npmjs.com/package/portscanner
+	// portscanner only works on TCP not UDP, so not that :/
 	
-	// spawn factorio and tell it to connect to a server directly
-	var gameprocess = child_process.spawn("./factorio/bin/x64/factorio", [
-		"--mp-connect", data.ip+":"+data.port,
-	]);
+	// RCON in to check if server is accessible
+	var client = new Rcon({
+		host: data.ip,
+		port: data.rconPort,
+		password: "thisisntarealpassword", 
+		// people who play at servers shouldn't necessarily have admin access but rcon requires a password to connect
+		// and rcon connects even when it doesn't manage to authenticate
+		timeout: 10, // timeout is an advantage when we only want to check if its up, if it hasn't answered in 10s its probably not there anyways
+	});
+	// start connection
+	client.connect();
+
+	// when connected disconnect
+	client.on('connected', function () {
+		console.log('Connected!');
+		client.close(); // disconnect once we have connected because we are not actually going to rcon anything
+	}).on('disconnected', function () {
+		console.log('RCON confirmed!');
+		//spawn factorio and tell it to connect to a server directly
+		console.log("Starting factorio...");
+		var gameprocess = child_process.spawn("./factorio/bin/x64/factorio", [
+			"--mp-connect", data.ip+":"+data.port,
+		]);
+	});
+	
 });

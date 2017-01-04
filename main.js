@@ -1,9 +1,9 @@
-const {ipcRenderer} = require('electron')
-const ipc = ipcRenderer
+const {ipcRenderer} = require('electron');
+const ipc = ipcRenderer;
 setInterval(function(){
 	// IPC send sends text/json/whatever to index.js or anything on the nodeside that cares to listen
 	ipc.send('getServers', "plz send");
-}, 1000)
+}, 500)
 
 ipc.on("setServers", function(event, data){
 	//console.log(data)
@@ -31,7 +31,7 @@ ipc.on("setServers", function(event, data){
 				}
 			}
 			// add button to join server, also generate buttons with string manipulation because that is SO SAFE!
-			html += "<td onclick='launchFactorio(\""+data[key].publicIP+"\",\""+data[key].serverPort+"\")'>Join server</td></tr>"
+			html += "<td onclick='launchFactorio(\""+data[key].publicIP+"\",\""+data[key].serverPort+"\",\""+data[key].rconPort+"\")'>Join server</td></tr>"
 		}
 	}
 	// console.log(html)
@@ -39,10 +39,11 @@ ipc.on("setServers", function(event, data){
 });
 
 // tell node to launch factorio
-function launchFactorio(ip, port) {
+function launchFactorio(ip, port, rconPort) {
 	let object = {
 		ip:ip,
 		port:port,
+		rconPort:rconPort,
 	}
 	ipc.send("launchFactorio", object);
 }

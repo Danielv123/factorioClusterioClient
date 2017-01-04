@@ -26,6 +26,9 @@
     "electron-prebuilt": "^1.4.13"
   },
   "dependencies": {
-    "needle": "^1.4.3"
+    "adm-zip": "^0.4.7",
+    "needle": "^1.4.3",
+    "portscanner": "^2.1.1",
+    "simple-rcon": "^0.3.1"
   }
 }
