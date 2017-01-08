@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
     "needle": "^1.4.3",
     "portscanner": "^2.1.1",
     "simple-rcon": "^0.3.1"

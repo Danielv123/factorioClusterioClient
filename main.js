@@ -4,9 +4,10 @@ setInterval(function(){
 	// IPC send sends text/json/whatever to index.js or anything on the nodeside that cares to listen
 	ipc.send('getServers', "plz send");
 }, 500)
-
+var globalData;
 ipc.on("setServers", function(event, data){
 	//console.log(data)
+	globalData = data;
 	let html = ""
 	// generate title row
 	for(let turkey in data) {
@@ -31,7 +32,8 @@ ipc.on("setServers", function(event, data){
 				}
 			}
 			// add button to join server, also generate buttons with string manipulation because that is SO SAFE!
-			html += "<td onclick='launchFactorio(\""+data[key].publicIP+"\",\""+data[key].serverPort+"\",\""+data[key].rconPort+"\")'>Join server</td></tr>"
+			// html += "<td onclick='launchFactorio(\""+data[key].publicIP+"\",\""+data[key].serverPort+"\",\""+data[key].rconPort+"\",\""+JSON.stringify(data[key].mods)+"\")'>Join server</td></tr>"
+			html += '<td id="temp" onclick="launchFactorio(this)">Join server</td>'
 		}
 	}
 	// console.log(html)
@@ -39,11 +41,28 @@ ipc.on("setServers", function(event, data){
 });
 
 // tell node to launch factorio
-function launchFactorio(ip, port, rconPort) {
+// this is some shitty patchwork solution that is 100% guaranteed to break
+function launchFactorio(element) {
+	console.log(element.parentElement.querySelectorAll("td")[0].innerHTML)
+	data = globalData[element.parentElement.querySelectorAll("td")[0].innerHTML]
+	let object = {
+		ip:data.publicIP,
+		port:data.serverPort,
+		rconPort:data.rconPort,
+		mods:data.mods,
+	};
+	console.log(object);
+	ipc.send("launchFactorio", object);
+}
+
+/*
+function launchFactorio(ip, port, rconPort, mods) {
 	let object = {
 		ip:ip,
 		port:port,
 		rconPort:rconPort,
+		mods:mods,
 	}
 	ipc.send("launchFactorio", object);
 }
+*/

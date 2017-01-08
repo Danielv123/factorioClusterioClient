@@ -5,6 +5,8 @@ const ipc = ipcMain
 const needle = require("needle")
 const child_process = require('child_process');
 const Rcon = require('simple-rcon');
+const http = require('http');
+const fs = require('fs');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -54,8 +56,6 @@ app.on('activate', () => {
 		createWindow()
 	}
 })
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
 
 ipc.on('getServers', function (event, data) {
     //console.log(data)
@@ -67,10 +67,8 @@ ipc.on('getServers', function (event, data) {
 });
 
 ipc.on("launchFactorio", function(event, data){
-	console.log("Preparing to launch factorio... "+data)
-	// Todo: Check if factorio server is running at that port before launching factorio,
-	// possibly using https://www.npmjs.com/package/portscanner
-	// portscanner only works on TCP not UDP, so not that :/
+	console.log("Preparing to launch factorio with "+data.ip+":"+data.port)
+	console.log(data.mods)
 	
 	// RCON in to check if server is accessible
 	var client = new Rcon({
@@ -87,14 +85,41 @@ ipc.on("launchFactorio", function(event, data){
 	// when connected disconnect
 	client.on('connected', function () {
 		console.log('Connected!');
-		client.close(); // disconnect once we have connected because we are not actually going to rcon anything
-	}).on('disconnected', function () {
 		console.log('RCON confirmed!');
-		//spawn factorio and tell it to connect to a server directly
-		console.log("Starting factorio...");
-		var gameprocess = child_process.spawn("./factorio/bin/x64/factorio", [
-			"--mp-connect", data.ip+":"+data.port,
-		]);
+		// download mods
+		let counter = 0;
+		for(let key in data.mods) {
+			console.log(data.mods[key]);
+			download("http://"+"localhost:8080/"+data.mods[key].modName, "factorio/mods/"+data.mods[key].modName, launch(data.mods[key].modName));
+		}
+		function launch(modName) {
+			counter++;
+			console.log("Downloaded: " + modName);
+			if(counter == data.mods.length) {
+				//download("http://"+"localhost:8080/"+)
+				
+				//spawn factorio and tell it to connect to a server directly
+				console.log("Starting factorio...");
+				/*var gameprocess = child_process.spawn("./factorio/bin/x64/factorio", [
+					"--mp-connect", data.ip+":"+data.port,
+				]);*/
+			}
+		}
+		
+		
+		// this causes error write_after_end, and it is kinda important but I have to leave it out
+		//client.close(); // disconnect once we have connected because we are not actually going to rcon anything
+	}).on('disconnected', function () {
+		
 	});
-	
 });
+
+var download = function(url, dest, cb) {
+  var file = fs.createWriteStream(dest);
+  var request = http.get(url, function(response) {
+    response.pipe(file);
+    file.on('finish', function() {
+      file.close(cb);
+    });
+  });
+}
