@@ -3,15 +3,17 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Hello World!</title>
-	<script src="main.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
-		<h1>Hello World!</h1>
-		We are using node <script>document.write(process.versions.node)</script>,
+		<h1>Clusterio Client</h1>
+		<p>Master server</p>
+		<input id="masterInput" type="text" onchange="setMasterAddress()">
+		<!--We are using node <script>document.write(process.versions.node)</script>,
 		Chrome <script>document.write(process.versions.chrome)</script>,
-		and Electron <script>document.write(process.versions.electron)</script>.
+		and Electron <script>document.write(process.versions.electron)</script>.-->
 	<p>Slaves:</p>
 	<table id="slaves"></table>
+	<script src="main.js"></script>
 	</body>
 </html>

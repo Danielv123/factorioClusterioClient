@@ -8,6 +8,13 @@ const Rcon = require('simple-rcon');
 const http = require('http');
 const fs = require('fs');
 
+const Config = require('electron-config');
+const config = new Config();
+
+// ensure default config settings
+if(!config.get("masterAddress")) config.set("masterAddress", "localhost:8080");
+
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -59,7 +66,7 @@ app.on('activate', () => {
 
 ipc.on('getServers', function (event, data) {
     //console.log(data)
-	needle.get('localhost:8080/slaves', function(error, response, body) {
+	needle.get(config.get("masterAddress")+'/slaves', function(error, response, body) {
 		if (!error) {
 			event.sender.send('setServers', body)
 		}
@@ -90,19 +97,17 @@ ipc.on("launchFactorio", function(event, data){
 		let counter = 0;
 		for(let key in data.mods) {
 			console.log(data.mods[key]);
-			download("http://"+"localhost:8080/"+data.mods[key].modName, "factorio/mods/"+data.mods[key].modName, launch(data.mods[key].modName));
+			download("http://"+config.get("masterAddress")+"/"+data.mods[key].modName, "factorio/mods/"+data.mods[key].modName, launch(data.mods[key].modName));
 		}
 		function launch(modName) {
 			counter++;
 			console.log("Downloaded: " + modName);
 			if(counter == data.mods.length) {
-				//download("http://"+"localhost:8080/"+)
-				
 				//spawn factorio and tell it to connect to a server directly
 				console.log("Starting factorio...");
-				/*var gameprocess = child_process.spawn("./factorio/bin/x64/factorio", [
+				var gameprocess = child_process.spawn("./factorio/bin/x64/factorio", [
 					"--mp-connect", data.ip+":"+data.port,
-				]);*/
+				]);
 			}
 		}
 		

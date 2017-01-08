@@ -1,5 +1,9 @@
 const {ipcRenderer} = require('electron');
 const ipc = ipcRenderer;
+
+const Config = require('electron-config');
+const config = new Config();
+
 setInterval(function(){
 	// IPC send sends text/json/whatever to index.js or anything on the nodeside that cares to listen
 	ipc.send('getServers', "plz send");
@@ -55,14 +59,14 @@ function launchFactorio(element) {
 	ipc.send("launchFactorio", object);
 }
 
-/*
-function launchFactorio(ip, port, rconPort, mods) {
-	let object = {
-		ip:ip,
-		port:port,
-		rconPort:rconPort,
-		mods:mods,
+// populate master address box at load
+document.querySelector('#masterInput').value = config.get("masterAddress")
+// change config when master address box changes
+function setMasterAddress() {
+	// check that the port is probable and won't crash us
+	let str = document.querySelector('#masterInput').value;
+	if(str.substr(str.indexOf(":") + 1) < 65535) {
+		config.set('masterAddress', str);
 	}
-	ipc.send("launchFactorio", object);
+	
 }
-*/
