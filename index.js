@@ -133,7 +133,6 @@ ipc.on("launchFactorio", function(event, data){
 			}
 		}
 		
-		
 		// this causes error write_after_end, and it is kinda important but I have to leave it out
 		//client.close(); // disconnect once we have connected because we are not actually going to rcon anything
 	}).on('disconnected', function () {
@@ -142,11 +141,11 @@ ipc.on("launchFactorio", function(event, data){
 });
 
 var download = function(url, dest, cb) {
-  var file = fs.createWriteStream(dest);
-  var request = http.get(url, function(response) {
-    response.pipe(file);
-    file.on('finish', function() {
-      file.close(cb);
-    });
-  });
+	var file = fs.createWriteStream(dest);
+	var request = http.get(url, function(response) {
+		response.pipe(file);
+		file.on('finish', function() {
+			file.close(cb);
+		});
+	});
 }
