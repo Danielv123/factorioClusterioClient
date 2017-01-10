@@ -94,10 +94,29 @@ ipc.on("launchFactorio", function(event, data){
 		console.log('Connected!');
 		console.log('RCON confirmed!');
 		// download mods
+		let installedMods = fs.readdirSync("factorio/mods/")
+		for(let i = 0; i < installedMods.length; i++){
+			let x = false;
+			for(let key in data.mods){
+				if(installedMods[i] == data.mods[key].modName) {
+					x = true;
+				}
+			}
+			if (!x) {
+				console.log("Deleting: " + installedMods[i])
+				fs.unlinkSync("factorio/mods/"+installedMods[i])
+			}
+			
+		}
 		let counter = 0;
 		for(let key in data.mods) {
-			console.log(data.mods[key]);
-			download("http://"+config.get("masterAddress")+"/"+data.mods[key].modName, "factorio/mods/"+data.mods[key].modName, launch(data.mods[key].modName));
+			if(fs.existsSync("factorio/mods/"+data.mods[key].modName)){
+				console.log("Installed: " + data.mods[key].modName);
+			} else {
+				console.log("Downloading: " + data.mods[key].modName);
+				download("http://"+config.get("masterAddress")+"/"+data.mods[key].modName, "factorio/mods/"+data.mods[key].modName, launch(data.mods[key].modName));
+				console.log("Downloaded: " + data.mods[key].modName);
+			}
 		}
 		function launch(modName) {
 			counter++;
@@ -105,9 +124,9 @@ ipc.on("launchFactorio", function(event, data){
 			if(counter == data.mods.length) {
 				//spawn factorio and tell it to connect to a server directly
 				console.log("Starting factorio...");
-				var gameprocess = child_process.spawn("./factorio/bin/x64/factorio", [
+				/*var gameprocess = child_process.spawn("factorio/bin/x64/factorio", [
 					"--mp-connect", data.ip+":"+data.port,
-				]);
+				]);*/
 			}
 		}
 		
