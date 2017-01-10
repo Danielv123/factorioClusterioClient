@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+	"build": "electron-packager . clusterioClient --all && echo Done packaging!"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,8 @@
   },
   "homepage": "https://github.com/Danielv123/factorioClusterioClient#readme",
   "devDependencies": {
+    "electron-builder": "^11.2.3",
+    "electron-packager": "^8.4.0",
     "electron-prebuilt": "^1.4.13"
   },
   "dependencies": {

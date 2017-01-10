@@ -173,6 +173,7 @@ app.on("ready", function() { // run main app code
 		var request = http.get(url, function(response) {
 			response.pipe(file);
 			file.on('finish', function() {
+				console.log(url);
 				file.close(cb);
 			});
 		});
