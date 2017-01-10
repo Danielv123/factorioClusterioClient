@@ -30,7 +30,9 @@
     "electron-config": "^0.2.1",
     "fs": "0.0.1-security",
     "http": "0.0.0",
+    "mkdirp": "^0.5.1",
     "needle": "^1.4.3",
+    "os": "^0.1.1",
     "portscanner": "^2.1.1",
     "simple-rcon": "^0.3.1"
   }

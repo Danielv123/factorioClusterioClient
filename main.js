@@ -4,6 +4,10 @@ const ipc = ipcRenderer;
 const Config = require('electron-config');
 const config = new Config();
 
+const electron = require("electron");
+const remote = require("electron").remote;
+const mainProcess = remote.require("./index");
+
 setInterval(function(){
 	// IPC send sends text/json/whatever to index.js or anything on the nodeside that cares to listen
 	ipc.send('getServers', "plz send");
