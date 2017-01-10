@@ -30,7 +30,16 @@ ipc.on("setServers", function(event, data){
 			for(let key2 in data[key]) {
 				// run some special rules depending on the name of the field
 				if(key2 == "time"){
+					// print time in seconds instead of unix time
 					html += "<td>seen "+Math.floor((Date.now()-data[key][key2])/100)/10+"s ago</td>";
+				} else if (key2 == "mods"){
+					// Make modlist look nice
+					html += "<td>"
+					for(let i = 0;i<data[key].mods.length;i++){
+						// print one mod per line
+						html += data[key].mods[i].modName + "\n"
+					}
+					html += "</td>"
 				} else {
 					html += "<td>"+data[key][key2]+"</td>"
 				}
