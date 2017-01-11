@@ -83,3 +83,11 @@ function setMasterAddress() {
 	}
 	
 }
+
+// IPC listeners
+setInterval(function(){
+	ipc.send("tick")
+}, 100);
+ipc.on("printStatus", function(event, string){
+	document.querySelector("#dataDisplay").innerHTML = string
+});

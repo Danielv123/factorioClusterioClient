@@ -64,6 +64,9 @@ app.on('activate', () => {
 
 // app code down here ---------------------------------------------------------
 
+let lastMessage = "ready!";
+
+
 app.on("ready", function() { // run main app code
 	// ensure default config settings
 	if(!config.get("masterAddress")) config.set("masterAddress", "localhost:8080");
@@ -120,7 +123,7 @@ app.on("ready", function() { // run main app code
 		// when connected disconnect
 		client.on('connected', function () {
 			console.log('Connected!');
-			console.log('RCON confirmed, downloading mods...');
+			console.vlog('RCON confirmed, deleting mods...');
 			
 			// delete mods we don't want
 			let installedMods = fs.readdirSync(config.get("factorioDirectory")+"/mods/")
@@ -132,13 +135,13 @@ app.on("ready", function() { // run main app code
 					}
 				}
 				if (!x) {
-					console.log("Deleting: " + installedMods[i]);
+					console.vlog("Deleting: " + installedMods[i]);
 					// Unlink is how you delete files in node
 					fs.unlinkSync(config.get("factorioDirectory")+"/mods/"+installedMods[i]);
 				}
 				
 			}
-			
+			console.vlog("Downloading mods...");
 			// download mods we don't have
 			let counter = 0;
 			for(let key in data.mods) {
@@ -147,14 +150,17 @@ app.on("ready", function() { // run main app code
 					launch(data.mods[key].modName);
 				} else {
 					console.log("Downloading: " + data.mods[key].modName);
-					download("http://"+config.get("masterAddress")+"/"+data.mods[key].modName, config.get("factorioDirectory")+"/mods/"+data.mods[key].modName, launch(data.mods[key].modName));
+					//progressText("Downloading: " + data.mods[key].modName);
+					download("http://"+config.get("masterAddress")+"/"+data.mods[key].modName, config.get("factorioDirectory")+"/mods/"+data.mods[key].modName, launch, data.mods[key].modName);
 				}
 			}
-			function launch(modName) {
+			function launch(modName, size) {
+				if(!size) size = 0;
+				console.vlog("Downloading, last: " + modName + " " + Math.round(size/1048576*100)/100 + "mb");
 				counter++;
 				if(counter == data.mods.length) {
 					//spawn factorio and tell it to connect to a server directly
-					console.log("Starting factorio...");
+					console.vlog("Starting factorio...");
 					var gameprocess = child_process.spawn(config.get("factorioDirectory")+"/bin/x64/factorio", [
 						"--mp-connect", data.ip+":"+data.port,
 					]);
@@ -167,18 +173,41 @@ app.on("ready", function() { // run main app code
 			
 		});
 	});
+	
+	ipc.on("tick", function(event, data) {
+		event.sender.send('printStatus', lastMessage);
+	});
 
-	var download = function(url, dest, cb) {
+	var download = function(url, dest, cb, name) {
 		var file = fs.createWriteStream(dest);
 		var request = http.get(url, function(response) {
+			let size = response.headers["content-length"];
+			if(!name){
+				name = "download";
+			}
 			response.pipe(file);
 			file.on('finish', function() {
-				console.log(url);
-				file.close(cb);
+				// console.log(url);
+				file.close();
+				if(typeof cb == "function"){
+					if(!size) size = 0;
+					cb(name, size);
+				}
 			});
 		});
 	}
-
+	function progressText(e) {
+		// ipc.send("printStatus", e);
+		if(typeof e == "string"){
+			lastMessage = e;
+		} else {
+			throw "ERROR not string" + e;
+		}
+	}
+	console.vlog = function(e) {
+		console.log(e);
+		progressText(e);
+	}
 	// open file dialog to let you choose your factorio install
 	function selectFactorioDirectory() {
 		dialog.showOpenDialog({
