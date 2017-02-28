@@ -24,3 +24,5 @@ and build with
     npm run build
 
 you may need to `npm install electron-packager -g`  first.
+
+![clusterioClient](https://puu.sh/unNqs/aa460ed16c.png)
