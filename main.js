@@ -61,7 +61,7 @@ ipc.on("setServers", function(event, data){
 			}
 			// add button to join server, also generate buttons with string manipulation because that is SO SAFE!
 			// html += "<td onclick='launchFactorio(\""+data[key].publicIP+"\",\""+data[key].serverPort+"\",\""+data[key].rconPort+"\",\""+JSON.stringify(data[key].mods)+"\")'>Join server</td></tr>"
-			html += '<td id="temp" onclick="launchFactorio(this)">Join server</td>'
+			html += '<td id="temp" onclick="launchFactorio(this)"><button class="button launchButton">Join server</button></td>'
 		}
 	}
 	
