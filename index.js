@@ -13,6 +13,13 @@ const os = require("os")
 const Config = require('electron-config');
 const config = new Config();
 
+// solve problems with error boxes
+// Disable error dialogs by overriding
+// FIX: https://goo.gl/YsDdsS
+dialog.showErrorBox = function(title, content) {
+    console.log(`${title}\n${content}`);
+};
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -87,7 +94,7 @@ app.on("ready", function() { // run main app code
 
 	// manage and download mods, then launch factorio with a server IP
 	ipc.on("launchFactorio", function(event, data){
-		console.log("Preparing to launch factorio with "+data.ip+":"+data.port)
+		console.vlog("Preparing to launch factorio with "+data.ip+":"+data.port)
 		console.log(data.mods)
 		
 		// check if you chose the correct factorio directory
@@ -117,8 +124,7 @@ app.on("ready", function() { // run main app code
 			// and rcon connects even when it doesn't manage to authenticate
 			timeout: 10, // timeout is an advantage when we only want to check if its up, if it hasn't answered in 10s its probably not there anyways
 		});
-		// start connection
-		client.connect();
+		
 
 		// when connected disconnect
 		client.on('connected', function () {
@@ -167,11 +173,13 @@ app.on("ready", function() { // run main app code
 				}
 			}
 			
-			// this causes error write_after_end, and it is kinda important but I have to leave it out
-			//client.close(); // disconnect once we have connected because we are not actually going to rcon anything
+			// this causes error write_after_end, and it is kinda important but I have to leave it out (nope?)
+			client.close(); // disconnect once we have connected because we are not actually going to rcon anything
 		}).on('disconnected', function () {
 			
 		});
+		// start connection
+		client.connect();
 	});
 	
 	ipc.on("tick", function(event, data) {
