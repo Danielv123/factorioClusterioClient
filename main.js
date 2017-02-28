@@ -26,16 +26,27 @@ ipc.on("setServers", function(event, data){
 		}
 		break;
 	}
+	// loop over rows
 	for(let key in data) {
 		// only print servers that has been online some time the last 60 seconds (in ms)
-		if(Date.now() - data[key].time < 60000) {
+		if(Date.now() - data[key].time < 120000) {
 			//console.log(key, data[key]);
 			html += "<tr><td>"+key+"</td>";
+			
+			// loop over columns
 			for(let key2 in data[key]) {
 				// run some special rules depending on the name of the field
 				if(key2 == "time"){
 					// print time in seconds instead of unix time
-					html += "<td>seen "+Math.floor((Date.now()-data[key][key2])/100)/10+"s ago</td>";
+					let time = Math.floor((Date.now()-data[key][key2])/1000)
+					
+					// if slave pinged last 15 seconds, display it as online
+					// otherwise alert us to the fact that it is missing.
+					if (time < 15) {
+						html += "<td style='min-width:110px;'>Online</td>";
+					} else {
+						html += "<td style='min-width:110px;'>seen "+time+"s ago</td>";
+					}
 				} else if (key2 == "mods"){
 					// Make modlist look nice
 					html += "<td>"
@@ -53,8 +64,17 @@ ipc.on("setServers", function(event, data){
 			html += '<td id="temp" onclick="launchFactorio(this)">Join server</td>'
 		}
 	}
-	// console.log(html)
-	document.querySelector("#slaves").innerHTML = html
+	
+	// turn our HTML text into dom elements for comparison
+	var div = document.createElement('div');
+	div.innerHTML = html;
+	var div2 = document.createElement('div');
+	div2.innerHTML = document.querySelector("#slaves").innerHTML;
+	
+	// use special browser function for comparing dom elements
+	if(!div.isEqualNode(div2)) {
+		document.querySelector("#slaves").innerHTML = html
+	}
 });
 
 // tell node to launch factorio
