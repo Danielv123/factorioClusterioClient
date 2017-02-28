@@ -1,6 +1,6 @@
 {
   "name": "clusterio-client",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "GUI to download and launch factorio with server specific mods",
   "main": "index.js",
   "scripts": {

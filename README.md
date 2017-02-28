@@ -13,7 +13,7 @@ I am happpy to accept PRs.
 
 To set up a dev environment, clone the repo and run
 
-    npm install-dev
+    npm install
 
 test with
 
