@@ -16,52 +16,62 @@ var globalData;
 ipc.on("setServers", function(event, data){
 	//console.log(data)
 	globalData = data;
-	let html = ""
+	let html = "";
+	
 	// generate title row
-	for(let turkey in data) {
-		// slave ID is same as unique, but fuck cares its easier this way
-		html += "<tr><td>Slave ID</td>"
-		for(let key in data[turkey]) {
-			html += "<td>"+key+"</td>"
-		}
-		break;
+	let keys = {
+		"Slave ID":"unique",
+		"IP":"publicIP",
+		"mods":"mods",
+		"Status":"time",
+		"Players":"playerCount",
 	}
-	// loop over rows
-	for(let key in data) {
+	
+	// start with printing keys
+	html += "<tr>"
+	for (let key in keys) {
+		html += "<td>"+key+"</td>";
+	}
+	html += "</tr>"
+	
+	// keep going with printing slaves corresponding to the keys
+	for(let slave in data){
 		// only print servers that has been online some time the last 60 seconds (in ms)
-		if(Date.now() - data[key].time < 120000) {
-			//console.log(key, data[key]);
-			html += "<tr><td>"+key+"</td>";
-			
-			// loop over columns
-			for(let key2 in data[key]) {
-				// run some special rules depending on the name of the field
-				if(key2 == "time"){
+		if(Date.now() - data[slave].time < 120000) {
+			html += "<tr>"
+			for (let key in keys) {
+				let currentKey = keys[key]
+				if(currentKey == "time") {
 					// print time in seconds instead of unix time
-					let time = Math.floor((Date.now()-data[key][key2])/1000)
+					let seconds = Math.floor((Date.now()-data[slave][currentKey])/1000)
 					
 					// if slave pinged last 15 seconds, display it as online
 					// otherwise alert us to the fact that it is missing.
-					if (time < 15) {
+					if (seconds < 15) {
 						html += "<td style='min-width:110px;'>Online</td>";
 					} else {
-						html += "<td style='min-width:110px;'>seen "+time+"s ago</td>";
+						html += "<td style='min-width:110px;'>seen "+seconds+"s ago</td>";
 					}
-				} else if (key2 == "mods"){
+				} else if (currentKey == "mods") {
 					// Make modlist look nice
 					html += "<td>"
-					for(let i = 0;i<data[key].mods.length;i++){
+					for(let i = 0;i<data[slave].mods.length;i++){
 						// print one mod per line
-						html += data[key].mods[i].modName + "\n"
+						html += data[slave].mods[i].modName + "\n"
 					}
 					html += "</td>"
+				} else if (currentKey == "publicIP") {
+					html += "<td>"+data[slave][currentKey] + ":" + data[slave].serverPort
 				} else {
-					html += "<td>"+data[key][key2]+"</td>"
+					if (data[slave][keys[key]]){
+						html += "<td>"+data[slave][keys[key]]+"</td>"
+					} else {
+						html += "<td>Unsupported</td>"
+					}
 				}
 			}
-			// add button to join server, also generate buttons with string manipulation because that is SO SAFE!
-			// html += "<td onclick='launchFactorio(\""+data[key].publicIP+"\",\""+data[key].serverPort+"\",\""+data[key].rconPort+"\",\""+JSON.stringify(data[key].mods)+"\")'>Join server</td></tr>"
 			html += '<td id="temp" onclick="launchFactorio(this)"><button class="button launchButton">Join server</button></td>'
+			html += "</tr>"
 		}
 	}
 	
