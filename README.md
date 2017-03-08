@@ -7,6 +7,8 @@ multiplayer on servers with many different sets of mods.
 
 All issues and feature requests should be filed at [github issues](https://github.com/Danielv123/factorioClusterioClient/issues)
 
+Download: https://github.com/Danielv123/factorioClusterioClient/releases
+
 #Development
 
 I am happpy to accept PRs.
