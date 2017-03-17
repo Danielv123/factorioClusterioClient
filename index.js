@@ -85,7 +85,7 @@ app.on("ready", function() { // run main app code
 	// listen for IPC signal and get JSON data from master
 	ipc.on('getServers', function (event, data) {
 		//console.log(data)
-		needle.get(config.get("masterAddress")+'/slaves', function(error, response, body) {
+		needle.get(config.get("masterAddress")+'/api/slaves', function(error, response, body) {
 			if (!error) {
 				event.sender.send('setServers', body)
 			}
