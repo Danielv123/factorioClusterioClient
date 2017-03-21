@@ -111,7 +111,6 @@ function setMasterAddress() {
 	if(str.substr(str.indexOf(":") + 1) < 65535) {
 		config.set('masterAddress', str);
 	}
-	
 }
 
 // IPC listeners
