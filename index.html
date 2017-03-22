@@ -6,8 +6,18 @@
 	</head>
 	<body>
 		<h1>Clusterio Client</h1>
-		<a href="index.html">index</a>
-		<a href="settings.html">settings</a>
+		<div id="navbar">
+			<a href="index.html">
+				<div>
+					<p>index</p>
+				</div>
+			</a>
+			<a href="settings.html">
+				<div>
+					<p>settings</p>
+				</div>
+			</a>
+		</div>
 		<input id="folderSelector" type="submit" value="select factorio directory" onclick="mainProcess.selectFactorioDirectory()"/>
 		<p>Master server</p>
 		<input id="masterInput" type="text" onchange="setMasterAddress()">

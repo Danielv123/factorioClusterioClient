@@ -48,15 +48,25 @@ td {
 /*
 	Navbar styling
 */
-#navbar a {
+#navbar a div {
 	float:left;
 	width:100px;
 	height:60px;
 	text-align:center;
-	background-color:lightgreen;
+	background-color: #90ee90;
+	transition:1s;
+}
+#navbar a div:hover {
+	background-color:#80aa80;
+}
+#navbar a div p {
+	padding-top:16px;
+	font-size:20px;
+	color:black;
+	font-weight:bold;
 }
 
-/* Fancy togglle switch for toggly things  stolen from https://www.w3schools.com/howto/howto_css_switch.asp */
+/* Fancy toggle switch for toggly things  stolen from https://www.w3schools.com/howto/howto_css_switch.asp */
 /* The switch - the box around the slider */
 .switch {
   position: relative;
