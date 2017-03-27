@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron')
+const {app, BrowserWindow, ipcMain, dialog, Menu} = require('electron')
 const path = require('path')
 const url = require('url')
 const ipc = ipcMain
@@ -81,6 +81,31 @@ app.on("ready", function() { // run main app code
 		console.log("Factorio directory not set!");
 		selectFactorioDirectory();
 	}
+	
+	// create menu items
+	Menu
+	let template = [
+		{
+			label:"Settings",
+			click() {
+				win.loadURL(url.format({
+					pathname: path.join(__dirname, 'settings.html'),
+					protocol: 'file:',
+					slashes: true
+				}))
+			}
+		},{
+			role: 'help',
+			submenu: [
+				{
+					label: 'Report issue',
+					click () { require('electron').shell.openExternal('https://github.com/Danielv123/factorioClusterioClient/issues') }
+				}
+			]
+		}
+	]
+	const menu = Menu.buildFromTemplate(template)
+	Menu.setApplicationMenu(menu)
 
 	// listen for IPC signal and get JSON data from master
 	ipc.on('getServers', function (event, data) {

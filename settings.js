@@ -18,4 +18,9 @@ function setMasterAddress() {
 		config.set('masterAddress', str);
 	}
 }
-
+document.querySelector(".devconsole .switch .slider").checked = true;
+document.querySelector(".devconsole .switch .slider").onclick = function() {
+	console.log("devConsole", !this.parentElement.childNodes[0].checked);
+	config.set("devConsole", !this.parentElement.childNodes[0].checked);
+	
+}

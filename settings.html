@@ -5,31 +5,24 @@
 		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
+		<a href="index.html">
+				<div>
+					<p>Back to home page</p>
+				</div>
+			</a>
 		<h1>Settings</h1>
-		<div id="navbar">
-			<a href="index.html">
-				<div>
-					<p>index</p>
-				</div>
-			</a>
-			<a href="settings.html">
-				<div>
-					<p>settings</p>
-				</div>
-			</a>
-		</div>
 		<input id="folderSelector" type="submit" value="select factorio directory" onclick="mainProcess.selectFactorioDirectory()"/>
 		<p id="factorioDirectory"></p>
 		<p>Master server</p>
 		<input id="masterInput" type="text" onchange="setMasterAddress()">
 		<div id="toggleSettings">
-			<!--<div class="toggleableSetting">
-				<p>Show offline slaves</p>
+			<div class="toggleableSetting devconsole">
 				<label class="switch">
 					<input type="checkbox">
 					<div class="slider"></div>
 				</label>
-			</div>-->
+				<p>Dev console activated on launch</p>
+			</div>
 		</div>
 		<script src="settings.js"></script>
 	</body>
