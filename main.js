@@ -13,7 +13,7 @@ const needle = require("needle");
 var globalData;
 setInterval(function(){
 	// IPC send sends text/json/whatever to index.js or anything on the nodeside that cares to listen
-	ipc.send('getServers', "plz send");
+	// ipc.send('getServers', "plz send");
 	needle.get(config.get("masterAddress")+'/api/slaves', function(error, response, data) {
 		if (!error) {
 			//console.log(data)
@@ -40,7 +40,6 @@ setInterval(function(){
 			// keep going with printing slaves corresponding to the keys
 			for(let slave in data){
 				// only print servers that has been online some time the last 60 seconds (in ms)
-				console.log(data[slave]);
 				if(Date.now() - data[slave].time < 120000) {
 					html += "<tr>"
 					for (let key in keys) {
@@ -96,8 +95,8 @@ setInterval(function(){
 // tell node to launch factorio
 // this is some shitty patchwork solution that is 100% guaranteed to break
 function launchFactorio(element) {
-	console.log(element.parentElement.querySelectorAll("td")[0].innerHTML)
-	data = globalData[element.parentElement.querySelectorAll("td")[0].innerHTML]
+	console.log(element.parentElement.querySelectorAll("td")[1].innerHTML)
+	let data = globalData[element.parentElement.querySelectorAll("td")[1].innerHTML]
 	let object = {
 		ip:data.publicIP,
 		port:data.serverPort,
