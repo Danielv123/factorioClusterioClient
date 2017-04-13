@@ -40,7 +40,11 @@ setInterval(function(){
 			// keep going with printing slaves corresponding to the keys
 			for(let slave in data){
 				// only print servers that has been online some time the last 60 seconds (in ms)
-				if(Date.now() - data[slave].time < 120000) {
+				let kjasjda = 120000
+				if(config.get("offlineSlaves")) {
+					kjasjda = 9999999999;
+				}
+				if(Date.now() - data[slave].time < kjasjda) {
 					html += "<tr>"
 					for (let key in keys) {
 						let currentKey = keys[key]

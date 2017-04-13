@@ -121,7 +121,7 @@ app.on("ready", function() { // run main app code
 
 	// manage and download mods, then launch factorio with a server IP
 	ipc.on("launchFactorio", function(event, data){
-		console.vlog("Preparing to launch factorio with "+data.ip+":"+data.port)
+		console.vlog("Attempting to launch factorio with "+data.ip+":"+data.port)
 		console.log(data.mods)
 		
 		// check if you chose the correct factorio directory
